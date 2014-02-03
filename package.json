@@ -1,0 +1,20 @@
+{
+  "name": "MessageBus.ts",
+  "version": "0.0.1",
+  "description": "Client side message bus for TypeScript projects.",
+  "dependencies": {
+    
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "should": "~3.1.2",
+    "jake": "*",
+    "typescript": ">= 0.9.5"
+  },
+  "scripts": {
+    "test": "jake"
+  },
+  "repository": "",
+  "author": "",
+  "license": "GPL2"
+}
