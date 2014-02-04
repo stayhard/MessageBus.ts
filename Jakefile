@@ -63,6 +63,59 @@ task('default', {async: true}, function () {
 	
 });
 
+/**
+ * Creates all directories in a path if any or all of them don't exist.
+ */
+function mkpathSync(path) {
+	var currentPath = "";
+	var parts = path.split('/');
+	for (var i = 0; i < parts.length; i++) {
+		currentPath = currentPath + parts[i] + "/";
+
+		if (!fs.existsSync(currentPath)) {
+			console.log("create " + currentPath);
+			fs.mkdir(currentPath);
+		}	
+	}
+}
+
+task('nuget', function () {
+	
+	var package = JSON.parse(fs.readFileSync('package.json'));
+
+	var file = [
+	'<?xml version="1.0"?>',
+	'<package>',
+	'  <metadata>',
+    '    <id>' + package.name + '</id>',
+    '    <version>' + package.version + '</version>',
+    '    <authors>' + package.author + '</authors>',
+    '    <projectUrl>' + package.homepage + '</projectUrl>',
+    '    <requireLicenseAcceptance>false</requireLicenseAcceptance>',
+    '    <description>' + package.description + '</description>',
+    '    <copyright>Copyright 2014 Stayhard AB</copyright>',
+    '  </metadata>',
+    '</package>'];
+
+	mkpathSync("work/nuget/Content/Scripts");
+
+	fs.writeFileSync('work/nuget/MessageBus.ts.nuspec', file.join('\r\n'));
+	fs.createReadStream('MessageBus.ts').pipe(fs.createWriteStream('work/nuget/Content/Scripts/MessageBus.ts'));
+
+	exec('nuget pack work/nuget/MessageBus.ts.nuspec -OutputDirectory work',
+        function(error, stdout, stderr) {
+            if (stderr) {
+              console.log(stderr);
+              console.log();
+              console.log('NuGet packaging failed.')
+            }
+            else {
+            	console.log(stdout);
+            }
+        });
+
+});
+
 
 jake.addListener('complete', function () {
   
