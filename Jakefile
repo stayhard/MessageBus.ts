@@ -83,6 +83,9 @@ task('nuget', function () {
 	
 	var package = JSON.parse(fs.readFileSync('package.json'));
 
+	mkpathSync("work/nuget/Content/Scripts");
+	mkpathSync("work/nuget/tools");
+
 	var file = [
 	'<?xml version="1.0"?>',
 	'<package>',
@@ -96,10 +99,15 @@ task('nuget', function () {
     '    <copyright>Copyright 2014 Stayhard AB</copyright>',
     '  </metadata>',
     '</package>'];
-
-	mkpathSync("work/nuget/Content/Scripts");
-
 	fs.writeFileSync('work/nuget/MessageBus.ts.nuspec', file.join('\r\n'));
+
+	file = [
+	'param($installPath, $toolsPath, $package, $project)',
+	'Write-Host "Setting Build Action of Scripts/MessageBus.ts to \'TypeScriptCompile\'"',
+	'$project.ProjectItems.Item("Scripts").ProjectItems.Item("MessageBus.ts").Properties.Item("ItemType").Value = "TypeScriptCompile"'
+	];
+	fs.writeFileSync('work/nuget/tools/install.ps1', file.join('\r\n'));
+
 	fs.createReadStream('MessageBus.ts').pipe(fs.createWriteStream('work/nuget/Content/Scripts/MessageBus.ts'));
 
 	exec('nuget pack work/nuget/MessageBus.ts.nuspec -OutputDirectory work',
