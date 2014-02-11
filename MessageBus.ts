@@ -50,7 +50,7 @@
 
         private regex: RegExp;
 
-        constructor (private pattern: string, public handler: (message: Message, replyChannel: Channel) => void) {
+        constructor (private pattern: string, public handler: (message: Message, replyChannel: ReplyChannel) => void) {
             this.regex = new RegExp(pattern);
         }
 
@@ -67,13 +67,13 @@
 
         private subscriptions: Subscription[] = [];
 
-        public add(pattern: string, handler: (message: Message, replyChannel: Channel) => void) : Subscription {
+        public add(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Subscription {
             var subscription = new Subscription(pattern, handler);
             this.subscriptions.push(subscription);
             return subscription;
         }
 
-        public remove(pattern: string, handler: (message: Message, replyChannel: Channel) => void) {
+        public remove(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) {
             this.subscriptions = this.subscriptions.filter((s)=> s.getPattern() !== pattern && s.handler !== handler);
         }
 
@@ -135,15 +135,15 @@
 
         }
 
-        public on(pattern: string, handler: (message: Message, replyChannel: Channel) => void) : Channel;
-        public on<T extends Message>(type: T, handler: (message: T, replyChannel: Channel) => void) : Channel {
+        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel;
+        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel {
             var pattern: string = toPattern(type);
             this.subscriptions.add(pattern, handler);
             return this;
         }
 
-        public off(pattern: string, handler: (message: Message, replyChannel: Channel) => void) : Channel;
-        public off<T extends Message>(type: T, handler: (message: T, replyChannel: Channel) => void) : Channel {
+        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel;
+        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel {
             var pattern: string = toPattern(type);
             this.subscriptions.remove(pattern, handler);
             return this;
@@ -176,8 +176,8 @@
 
         }
 
-        public on(pattern: string, handler: (message: Message, replyChannel: Channel) => void) : ReplyChannel;
-        public on<T extends Message>(type: T, handler: (message: T, replyChannel: Channel) => void) : ReplyChannel {
+        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel;
+        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel {
 
             var pattern: string = toPattern(type);
 
@@ -191,8 +191,8 @@
             return this;
         }
 
-        public off(pattern: string, handler: (message: Message, replyChannel: Channel) => void) : ReplyChannel;
-        public off<T extends Message>(type: T, handler: (message: T, replyChannel: Channel) => void) : ReplyChannel {
+        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel;
+        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel {
             var pattern: string = toPattern(type);
             this.subscriptions.remove(pattern, handler);
             return this;

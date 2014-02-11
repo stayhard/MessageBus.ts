@@ -97,6 +97,7 @@ task('nuget', function () {
     '    <requireLicenseAcceptance>false</requireLicenseAcceptance>',
     '    <description>' + package.description + '</description>',
     '    <copyright>Copyright 2014 Stayhard AB</copyright>',
+    '    <licenseUrl>https://github.com/stayhard/MessageBus.ts/blob/master/LICENSE</licenseUrl>',
     '  </metadata>',
     '</package>'];
 	fs.writeFileSync('work/nuget/MessageBus.ts.nuspec', file.join('\r\n'));
