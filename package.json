@@ -1,6 +1,6 @@
 {
   "name": "MessageBus.ts",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Client side message bus for TypeScript projects.",
   "dependencies": {
     

@@ -55,27 +55,20 @@ describe('Channel', function(){
 	});
 
 	describe('#publish()', function(){
-		it('should return a reply channel that emits messages sent by all handlers', function(done){
+		it('should return a reply channel that emits (queued) messages published by subscribers', function(done){
 
 			var channel = new MessageBus.Channel();
 
-			channel.on(TestMessage, (m, reply) => {
-					reply.publish(TestMessage2)
-						.on(TestMessage3, () => {
-								done();
-							});
-				});
+			channel.on(TestMessage, (m, reply) => { reply.publish(TestMessage2); });
 
-			channel.on(TestMessage2, (m, reply) => {
-					reply.publish(TestMessage3);
+			channel.publish(TestMessage).on(TestMessage2, (m, reply) => {
+					done();
 				});
-
-			channel.publish(TestMessage);
 		});
 	});
 
 	describe('#publish()', function(){
-		it('should bubble up through each nested reply channel', function(done){
+		it('should bubble up to root channel', function(done){
 
 			var doneCount = 0;
 			var expectDone = (expect: number) => {
@@ -87,29 +80,48 @@ describe('Channel', function(){
 			var channel = new MessageBus.Channel();
 
 			channel.on(TestMessage, (m, reply) => {
-					reply.publish(TestMessage2)
-						.on(TestMessage3, () => {
-								expectDone(3);
-							});
-
-					reply.on(TestMessage3, () => {
-						expectDone(3);
-						});
+					reply.publish(TestMessage2);
 				});
 
-			channel.on(TestMessage3, (m, reply) => {
-					expectDone(3);
+			channel.on(TestMessage2, (m, reply) => {
+					expectDone(2);
 				});
 
 			channel.publish(TestMessage)
 				.on(TestMessage2, (m, reply) => {
-					reply.publish(TestMessage3);
+					expectDone(2);
 				});
 		});
 	});
 
-	describe('#on()', function(){
-		it('should not get messages published on parent channels', function(done){
+	describe('ReplyChannel', function(){
+		it('should only ever be one reply channel for each handler on root channel', function(done){
+
+			var doneCount = 0;
+			var expectDone = (expect: number) => {
+				if (++doneCount == expect) {
+					done();
+				}
+			};
+
+			var channel = new MessageBus.Channel();
+
+			channel.on(TestMessage, (m, reply) => {
+					reply.on(TestMessage2, (m2, reply2) => {
+						reply2.on(TestMessage3, () => {
+							done();
+						});
+					});
+				});
+
+			var replyChannel = channel.publish(TestMessage);
+			replyChannel.publish(TestMessage2);
+			replyChannel.publish(TestMessage3);
+		});
+	});
+
+	describe('ReplyChannel', function(){
+		it('should not get messages published on root channel', function(done){
 
 			var channel = new MessageBus.Channel();
 
@@ -125,9 +137,26 @@ describe('Channel', function(){
 			done();
 		});
 	});
+
+	describe('#on()', function(){
+		it('should match string patterns as regex', function(done){
+
+			var channel = new MessageBus.Channel();
+
+			channel.on("Test$", (m, reply) => {
+					done(new Error("Failed"));
+				});
+
+			channel.on("^Test", (m, reply) => {
+					done();
+				});
+
+			channel.publish(TestMessage);
+		});
+	});
 });
 
-describe('Channel', function(){
+describe('Message', function(){
 
 	describe('instanceof', function(){
 		it('should return true if same type of message', function(done){
