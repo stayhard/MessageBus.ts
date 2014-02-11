@@ -16,4 +16,10 @@ channel.on("Exception$", () => {
 ```
 
 - Logging parts have been removed as they was no longer used.
-    
+- It's now possible to get the message's name in a message handler by accessing the message's 'messageType' property. Example:
+
+```
+channel.on(".", (m) => {
+  alert("Got a message of type " + (<any>m).messageType);
+});
+```    

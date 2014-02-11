@@ -35,6 +35,7 @@
                 function F() { }
 
                 F.prototype = definition.prototype;
+                F.prototype.messageType = name;
                 return new F();
             };
             (<any>definition).messageType = name;

@@ -173,4 +173,18 @@ describe('Message', function(){
 		});
 	});
 
+	describe('#messageType', function(){
+		it('should return the name of the message', function(done){
+
+			var channel = new MessageBus.Channel();
+
+			channel.on('.', (m) => {
+				(<any>m).messageType.should.equal("TestMessage");
+				done();
+			});
+
+			channel.publish(TestMessage);
+		});
+	});
+
 });
