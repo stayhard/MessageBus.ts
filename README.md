@@ -5,36 +5,36 @@ Client side message bus for TypeScript projects.
 
 ## Getting started ##
 
-1. Create a statically typed message
-```
-interface MyMessage extends MessageBus.Message {
-  someProp: string;
-}
-// Note that the variable name, generic argument and the given string needs to match the name of the interface above.
-//                 |                   |                         |
-//     +-----------+                   |           +-------------+
-//     V                               V           V               
-var MyMessage = MessageBus.Message<MyMessage>("MyMessage");
-```
+1.  Create a statically typed message
+    ```
+    interface MyMessage extends MessageBus.Message {
+        someProp: string;
+    }
+    // Note that the variable name, generic argument and the given string needs to match the name of the interface above.
+    //                 |                   |                         |
+    //     +-----------+                   |           +-------------+
+    //     V                               V           V               
+    var MyMessage = MessageBus.Message<MyMessage>("MyMessage");
+    ```
 
-2. Create a channel:
-```
-var channel = new MessageBus.Channel();
-```
+2.  Create a channel:
+    ```
+    var channel = new MessageBus.Channel();
+    ```
 
-3. Subscribe to your message:
-```
-channel.on(MyMessage, (m) => alert("Value of someProp: " + m.someProp));
-```
+3.  Subscribe to your message:
+    ```
+    channel.on(MyMessage, (m) => alert("Value of someProp: " + m.someProp));
+    ```
 
-4. Publish your message:
-```
-channel.publish(MyMessage, (m: MyMessage) => {
-    m.someProp = "MyValue;
-});
-```
+4.  Publish your message:
+    ```
+    channel.publish(MyMessage, (m: MyMessage) => {
+        m.someProp = "MyValue;
+    });
+    ```
 
-5. Profit!
+5.  Profit!
 
 ## Getting Advanced ##
 
