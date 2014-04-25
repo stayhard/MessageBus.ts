@@ -90,7 +90,29 @@ channel.on('Key.+', (m, replyChannel) => {
 
 You can chain this to create a dialog between the handler and publisher with multiple messages going back and forth.
 
+## How to tests ##
+
+Make sure you have node, typescript and jake installed. If not, install node and run the following commands:
+
+    npm install -g typescript
+    npm install -g jake
+
+Then, run the following commands in the project root:
+
+    npm install <- Only required once
+    jake
+
+## How to build NuGet package ##
+
+Make sure the NuGet command line utility is in your PATH. In the Jake build file, there's a ''nuget'' task. From the command line in the root of the project, run:
+
+    jake nuget
+
 ## Changelog ##
+**0.1.3**
+
+- Fix for on() and off() function overloads causing generic calls not to work implicitly.
+
 **0.1.0**
 
 - Reply channels are no longer nested. Only one reply channel is ever created for each subscriber on the root channel.

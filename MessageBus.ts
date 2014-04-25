@@ -117,7 +117,7 @@
     /**
      * Returns the regex pattern for the specified input used to match handlers with message type names.
      */
-    function toPattern(input: any) {
+    function toPattern(input: any): string {
         if (typeof input === 'string') {
             return input;
         }
@@ -136,16 +136,18 @@
 
         }
 
-        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel;
-        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel {
-            var pattern: string = toPattern(type);
+        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel;
+        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel {
+            // toPattern converts message types to string patterns (in case this method is called with the generic overload)
+            pattern = toPattern(pattern);
             this.subscriptions.add(pattern, handler);
             return this;
         }
 
-        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel;
-        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel {
-            var pattern: string = toPattern(type);
+        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : Channel;
+        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : Channel {
+            // toPattern converts message types to string patterns (in case this method is called with the generic overload)
+            pattern = toPattern(pattern);
             this.subscriptions.remove(pattern, handler);
             return this;
         }
@@ -177,10 +179,10 @@
 
         }
 
-        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel;
-        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel {
-
-            var pattern: string = toPattern(type);
+        public on<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel;
+        public on(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel {
+            // toPattern converts message types to string patterns (in case this method is called with the generic overload)
+            pattern = toPattern(pattern);
 
             var subscription = this.subscriptions.add(pattern, handler);
 
@@ -192,9 +194,10 @@
             return this;
         }
 
-        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel;
-        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel {
-            var pattern: string = toPattern(type);
+        public off<T extends Message>(type: T, handler: (message: T, replyChannel: ReplyChannel) => void) : ReplyChannel;
+        public off(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) : ReplyChannel {
+            // toPattern converts message types to string patterns (in case this method is called with the generic overload)
+            pattern = toPattern(pattern);
             this.subscriptions.remove(pattern, handler);
             return this;
         }
