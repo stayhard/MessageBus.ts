@@ -75,7 +75,7 @@
         }
 
         public remove(pattern: string, handler: (message: Message, replyChannel: ReplyChannel) => void) {
-            this.subscriptions = this.subscriptions.filter((s)=> s.getPattern() !== pattern && s.handler !== handler);
+            this.subscriptions = this.subscriptions.filter((s)=> s.getPattern() !== pattern || s.handler !== handler);
         }
 
         /**
